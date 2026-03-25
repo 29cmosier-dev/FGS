@@ -35,22 +35,25 @@ def scrape():
         
         # Ensure we have enough elements to reach index 13
         if len(stats) >= 14:
-            messages_today = stats[8].get_text(strip=True)
-            active_now = stats[13].get_text(strip=True) 
-            
+            # Targeted indices
+            msg_today = stats[8].get_text(strip=True)
+            active_now = stats[13].get_text(strip=True)
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
             
-            # 3. Save to the single 'stats.csv' file
-            new_row = pd.DataFrame([[timestamp, messages_today, active_now]], 
+            # 3. Correct Append Logic
+            file_name = 'stats.csv'
+            new_data = pd.DataFrame([[timestamp, msg_today, active_now]], 
                                    columns=['Timestamp', 'Messages Today', 'Active Now'])
             
-            file_exists = os.path.isfile('stats.csv')
-            # mode='a' appends to the file; header=not file_exists only adds the header once
-            new_row.to_csv('stats.csv', mode='a', index=False, header=not file_exists)
+            # Check if file exists to decide if we need a header
+            file_exists = os.path.isfile(file_name)
             
-            print(f"Success! Logged at {timestamp} -> Messages: {messages_today}, Active: {active_now}")
+            # Save: mode='a' (append), header=False (if file exists)
+            new_data.to_csv(file_name, mode='a', index=False, header=not file_exists)
+            
+            print(f"Logged: {timestamp} | {msg_today} | {active_now}")
         else:
-            print(f"Error: Found only {len(stats)} elements. Check if dashboard changed.")
+            print(f"Error: Only found {len(stats)} stats.")
 
 if __name__ == "__main__":
     scrape()
