@@ -22,9 +22,9 @@ def scrape():
 
     # 2. Find the 297 (it's the 7th 'display-6' element based on your screenshot)
     stats = soup.find_all(class_="display-6")
-    if len(stats) > 9:
+    if len(stats) > 8:
         # Change this line to specifically grab the text from the 7th item
-        messages_today = stats[9].get_text(strip=True)
+        messages_today = stats[8].get_text(strip=True)
         print(f"Captured: {messages_today}")
     else:
         print(f"Error: Found only {len(stats)} stats. Check if Cookie expired.")
