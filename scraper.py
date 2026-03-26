@@ -47,11 +47,12 @@ def scrape():
         if len(stats) >= 14:
             msg_today = stats[8].get_text(strip=True)
             active_now = stats[13].get_text(strip=True)
-            print(f"SUCCESS: Data captured -> Messages: {msg_today}, Active: {active_now}")
+            total_users = stats[1].get_text(strip=True)
+            print(f"SUCCESS: Data captured -> Messages: {msg_today}, Active: {active_now}, Total Users: {total_users}")
             
             timestamp = datetime.now().strftime('%Y-%m-%d %H:%M')
-            new_data = pd.DataFrame([[timestamp, msg_today, active_now]], 
-                                    columns=['Timestamp', 'Messages Today', 'Active Now'])
+            new_data = pd.DataFrame([[timestamp, msg_today, active_now, total_users]], 
+                                    columns=['Timestamp', 'Messages Today', 'Active Now', 'Total Users'])
             
             # 3. File System Debugging
             file_path = 'stats.csv'
@@ -63,7 +64,7 @@ def scrape():
         else:
             print("ERROR: Not enough 'display-6' elements found. Did the dashboard layout change?")
             # Optional: Print the first 500 characters of the page to see what we actually got
-            # print(dash_response.text[:500]) 
+            print(dash_response.text[:500]) 
 
 
 def scrape_schools():
