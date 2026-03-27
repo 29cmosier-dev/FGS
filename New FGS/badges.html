@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Badge Collection</title>
+    <style>
+        body {
+            margin: 2rem 4rem;
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-top: 3rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #444;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- CSS Grid Layout --- */
+        .badge-grid {
+            display: grid;
+            /* Creates as many 120px columns as will fit, then centers them */
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+            margin-top: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* --- Badge Card Base --- */
+        .badge-card {
+            position: relative;
+            height: 140px;
+            background: linear-gradient(145deg, #383838, #1a1a1a);
+            border: 2px solid #555;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+
+        .badge-card span {
+            font-size: 38px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .badge-card small {
+            font-size: 0.75rem;
+            text-align: center;
+            font-weight: 500;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        /* --- Hover "Lift" Effect --- */
+        .badge-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        /* --- Tooltip (Details) --- */
+        .details {
+            visibility: hidden;
+            width: 180px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 100;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            font-size: 0.8rem;
+            border: 1px solid currentColor; /* Matches rarity color */
+            pointer-events: none;
+        }
+
+        .badge-card:hover .details {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* --- Rarity Accents --- */
+        .common { border-color: #7f8c8d; color: #7f8c8d; }
+        .uncommon { border-color: #27ae60; color: #27ae60; }
+        .rare { border-color: #2980b9; color: #2980b9; }
+        .epic { border-color: #8e44ad; color: #8e44ad; }
+        .legendary { border-color: #f1c40f; color: #f1c40f; box-shadow: inset 0 0 10px rgba(241, 196, 15, 0.1); }
+        
+        .secret { 
+            border-color: #d35400; 
+            color: #d35400; 
+            border-style: dashed; 
+        }
+
+        /* Icon starts very blurred and grey */
+        .secret span { 
+            filter: blur(15px) grayscale(100%); 
+            transition: filter 0.8s ease; 
+        }
+
+        /* On hover, it becomes slightly less blurry but stays grayscale/faded */
+        .badge-card.secret:hover span { 
+            filter: blur(4px) grayscale(100%) opacity(0.5); 
+        }
+
+        /* Tooltip styling for secret hints */
+        .secret .details {
+            font-style: italic;
+            background-color: #1a0000; /* Darker red-tinted background */
+            border-color: #d35400;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <!-- COMMON SECTION -->
+        <h1>Common</h1>
+        <div class="badge-grid">
+            <div class="badge-card common"><span>📝</span><small>First Moment</small><div class="details">Post your first Moment</div></div>
+            <div class="badge-card common"><span>💬</span><small>First Chat</small><div class="details">Send your first chat message</div></div>
+            <div class="badge-card common"><span>📊</span><small>Poll Participant</small><div class="details">Vote on your first poll</div></div>
+            <div class="badge-card common"><span>📅</span><small>Daily Visitor</small><div class="details">Log in for 1 day</div></div>
+            <div class="badge-card common"><span>👍</span><small>Friendly Neighbor</small><div class="details">React to someone else’s Moment for the first time</div></div>
+            <div class="badge-card common"><span>🖼️</span><small>Profile Complete</small><div class="details">Add profile picture + bio</div></div>
+            <div class="badge-card common"><span>🚀</span><small>Quick Starter</small><div class="details">Complete 3 actions (post, vote, chat) in one day</div></div>
+        </div>
+
+        <!-- UNCOMMON SECTION -->
+        <h1>Uncommon</h1>
+        <div class="badge-grid">
+            <div class="badge-card uncommon"><span>🗨️</span><small>Chatty</small><div class="details">Send 50 messages</div></div>
+            <div class="badge-card uncommon"><span>📸</span><small>Moment Maker</small><div class="details">Post 5 Moments</div></div>
+            <div class="badge-card uncommon"><span>🗳️</span><small>Poll Enthusiast</small><div class="details">Vote on 20 polls</div></div>
+            <div class="badge-card uncommon"><span>❤️</span><small>Reaction Machine</small><div class="details">Give 50 reactions</div></div>
+            <div class="badge-card uncommon"><span>😄</span><small>Friendly Face</small><div class="details">Get 10 reactions on your Moments</div></div>
+            <div class="badge-card uncommon"><span>⚠️</span><small>Supporter</small><div class="details">Flag 1 inappropriate Moment responsibly</div></div>
+            <div class="badge-card uncommon"><span>📨</span><small>Suggestion Box</small><div class="details">Submit 3 poll suggestions or site ideas</div></div>
+        </div>
+
+        <!-- RARE SECTION -->
+        <h1>Rare</h1>
+        <div class="badge-grid">
+            <div class="badge-card rare"><span>💎</span><small>XP Collector</small><div class="details">Reach 5,000 XP</div></div>
+            <div class="badge-card rare"><span>🗯️</span><small>Super Chatty</small><div class="details">Send 200 messages</div></div>
+            <div class="badge-card rare"><span>🌟</span><small>Moment Star</small><div class="details">Post 30 Moments</div></div>
+            <div class="badge-card rare"><span>💖</span><small>Top Reacter</small><div class="details">Give 200 reactions</div></div>
+        </div>
+
+        <!-- EPIC SECTION -->
+        <h1>Epic</h1>
+        <div class="badge-grid">
+            <div class="badge-card epic"><span>💬💬</span><small>Ultimate Chat Master</small><div class="details">Send 500 messages</div></div>
+            <div class="badge-card epic"><span>📸📸</span><small>Legendary Moment Poster</small><div class="details">Post 100 Moments</div></div>
+            <div class="badge-card epic"><span>🗳️⭐</span><small>Poll Master</small><div class="details">Vote on 100 polls</div></div>
+            <div class="badge-card epic"><span>💎💎</span><small>XP Hoarder</small><div class="details">Reach 20,000 XP</div></div>
+            <div class="badge-card epic"><span>🎄🎃</span><small>Seasonal Enthusiast</small><div class="details">Participate in all seasonal events for a year</div></div>
+            <div class="badge-card epic"><span>⚠️🛡️</span><small>Flagging Pro</small><div class="details">Flag 10 Moments responsibly</div></div>
+        </div>
+
+        <!-- LEGENDARY SECTION -->
+        <h1>Legendary</h1>
+        <div class="badge-grid">
+            <div class="badge-card legendary"><span>🏆</span><small>Top XP User</small><div class="details">Finish a month as #1 XP holder</div></div>
+            <div class="badge-card legendary"><span>🌟🏆</span><small>Moment Legend</small><div class="details">Post 50 Moments</div></div>
+            <div class="badge-card legendary"><span>👑💖</span><small>Ultimate Reacter</small><div class="details">Give 1,000 reactions</div></div>
+            <div class="badge-card legendary"><span>🗳️👑</span><small>Poll God</small><div class="details">Vote on every poll of a month</div></div>
+            <div class="badge-card legendary"><span>🛡️🏅</span><small>Community Hero</small><div class="details">Flag/moderate 100 Moments</div></div>
+            <div class="badge-card legendary"><span>📅💎</span><small>Anniversary Badge</small><div class="details">Log in every day for a full year</div></div>
+            <div class="badge-card legendary"><span>🚀🏅</span><small>Early User</small><div class="details">Be among first 100 users</div></div>
+        </div>
+
+        <!-- SECRET SECTION -->
+        <h1>Secret / Hidden</h1>
+        <div class="badge-grid">
+            <div class="badge-card secret">
+                <span>🌙</span><small>???</small>
+                <div class="details">The moon watches those who do not sleep...</div>
+            </div>
+            <div class="badge-card secret">
+                <span>🥚</span><small>???</small>
+                <div class="details">Some things are better left found than sought.</div>
+            </div>
+            <div class="badge-card secret">
+                <span>🤐</span><small>???</small>
+                <div class="details">A quiet word in the right place speaks volumes.</div>
+            </div>
+            <div class="badge-card secret">
+                <span>🌟💫</span><small>???</small>
+                <div class="details">To reach the stars, others must look up at you.</div>
+            </div>
+            <div class="badge-card secret">
+                <span>🕵️</span><small>???</small>
+                <div class="details">Not all paths are marked on the map.</div>
+            </div>
+            <div class="badge-card secret">
+                <span>💥</span><small>???</small>
+                <div class="details">A mistake made, a memory erased.</div>
+            </div>
+            <div class="badge-card secret">
+                <span>🎃🎄</span><small>???</small>
+                <div class="details">The calendar holds gifts for the patient.</div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

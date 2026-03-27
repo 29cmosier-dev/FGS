@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --accent-green: #09EE09;
+            --goose-gold: #f1c40f; /* For Goose Coins */
+            --border-muted: #444;
+            --text-dim: #898989;
+            --card-bg: #00000044;
+        }
+
+        body {
+            background: #121212;
+            margin: 0;
+            padding: 0;
+        }
+
+        .updates-main-box {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr; /* Slightly wider history column */
+            gap: 25px;
+            padding: 40px;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            color: white;
+            align-items: start;
+        }
+
+        .updates-card {
+            border-radius: 24px;
+            background: var(--card-bg);
+            box-sizing: border-box;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        /* --- Featured Update (Left) --- */
+        .new { 
+            padding: 2.5rem;
+            border: 1px solid var(--accent-green); 
+            box-shadow: 0 0 20px rgba(9, 238, 9, 0.15);
+            position: sticky;
+            top: 40px;
+        }
+
+        .new .goose-coin-text {
+            color: var(--goose-gold);
+            text-shadow: 0 0 5px rgba(241, 196, 15, 0.3);
+        }
+
+        /* --- History Column (Right) --- */
+        .history-column {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .old { 
+            max-height: 3.8rem; /* Collapsed state */
+            overflow: hidden;
+            padding: 1rem 1.5rem;
+            border: 1px solid var(--border-muted); 
+            color: var(--text-dim);
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .old:hover {
+            max-height: 1000px; /* Expanded state */
+            color: white;
+            border-color: #777;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            opacity: 1;
+        }
+
+        /* Content reveal animation */
+        .old ul, .old strong, .old p {
+            opacity: 0;
+            transition: opacity 0.3s ease 0.1s;
+        }
+
+        .old:hover ul, .old:hover strong, .old:hover p {
+            opacity: 1;
+        }
+
+        /* --- Global Elements --- */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .version-tag { color: white; font-size: 1.1rem; }
+        .date-tag { font-size: 0.8rem; opacity: 0.5; font-weight: normal; }
+        
+        ul { padding-left: 1.2rem; margin: 10px 0; }
+        li { margin-bottom: 8px; line-height: 1.4; list-style-type: '• '; padding-left: 5px; }
+        strong { color: var(--accent-green); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        @media (max-width: 1000px) {
+            .updates-main-box { grid-template-columns: 1fr; padding: 20px; }
+            .new { position: static; margin-bottom: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="updates-main-box">
+    <!-- FEATURED UPDATE -->
+    <div class="updates-card new">
+        <div class="card-header">
+            <h2 style="margin:0">Update 1.2</h2>
+            <span class="date-tag">Released 3-18-2026</span>
+        </div>
+        <p style="opacity: 0.6; margin-top: -10px;">Discussions System & Goose Coins</p>
+        
+        <strong>New Features:</strong>
+        <ul>
+            <li><strong>Discussions:</strong> Users can now make discussions and now have the ability to share their opinions on certain topics!</li>
+            <li><strong class="goose-coin-text">Goose Coins:</strong> We have now introduced the Flying Goose Studios currency, Goose Coins! More is to come, but in the meantime, you can now get stacked up on Goose Coins until we introduce ways to spend them!</li>
+            <li style="font-style: italic; opacity: 0.7;">More updates have been added, and this page spoils the fun of you discovering the updates. So go find them now!</li>
+        </ul>
+    </div>
+
+    <!-- HISTORY COLUMN -->
+    <div class="history-column">
+        <!-- v1.1.3 -->
+        <div class="updates-card old">
+            <div class="card-header">
+                <span class="version-tag">Update 1.1.3</span>
+                <span class="date-tag">3-17-2026</span>
+            </div>
+            <p style="opacity: 0.6; margin-top: -10px;">Security & Moderation Overhaul</p>
+            <strong>Safety Tools:</strong>
+            <ul>
+                <li><strong>Flagging System:</strong> Users can now report "Moments" even after initial approval.</li>
+                <li><strong>Moderation Transparency:</strong> Added a Ban Reason Box.</li>
+                <li><strong>Appeal Process:</strong> Integrated a formal Ban Appeal system.</li>
+                <li><strong>Automated Filters:</strong> Global word filters implemented on Moments.</li>
+                <li><strong>Updated Updates Page:</strong> New Version of the updates page added!</li>
+            </ul>
+        </div>
+
+        <!-- v1.1.2 -->
+        <div class="updates-card old">
+            <div class="card-header">
+                <span class="version-tag">Update 1.1.2</span>
+                <span class="date-tag">3-16-2026</span>
+            </div>
+            <strong>New Chat Features</strong>
+            <ul>
+                <li><strong>Images now shown in chat:</strong> Images are now shown live in chat! Clicking images opens them in a new tab!</li>
+            </ul>
+        </div>
+
+        <!-- v1.1.1 -->
+        <div class="updates-card old">
+            <div class="card-header">
+                <span class="version-tag">Update 1.1.1</span>
+                <span class="date-tag">3-16-2026</span>
+            </div>
+            <strong>Homepage & UI:</strong>
+            <ul>
+                <li><strong>Live Countdown:</strong> Added a real-time event timer to the header.</li>
+                <li><strong>Dynamic Features:</strong> New homepage sections for trending content.</li>
+                <li><strong>Performance:</strong> Optimized image loading.</li>
+            </ul>
+        </div>
+
+        <!-- v1.1.0 -->
+        <div class="updates-card old">
+            <div class="card-header">
+                <span class="version-tag">Update 1.1.0</span>
+                <span class="date-tag">3-15-2026</span>
+            </div>
+            <strong>Messaging Update:</strong>
+            <ul>
+                <li><strong>Presence System:</strong> Online, Offline, or Idle status dots.</li>
+                <li><strong>Instant Messaging:</strong> Full WebSocket integration for live chat.</li>
+                <li><strong>Visual Refresh:</strong> Redesigned chat bubbles and spacing.</li>
+            </ul>
+        </div>
+
+        <!-- v1.0.2 -->
+        <div class="updates-card old">
+            <div class="card-header">
+                <span class="version-tag">Update 1.0.2</span>
+                <span class="date-tag">3-10-2026</span>
+            </div>
+            <strong>Navigation & Support:</strong>
+            <ul>
+                <li><strong>Navigation Overhaul:</strong> Added "My Profile" dropdown and Admin panel access.</li>
+                <li><strong>Support Tickets:</strong> Launched a dedicated ticket system.</li>
+                <li><strong>UX Polish:</strong> Active-state effects and brand loading screen.</li>
+            </ul>
+        </div>
+
+        <!-- v1.0.1 -->
+        <div class="updates-card old">
+            <div class="card-header">
+                <span class="version-tag">Update 1.0.1</span>
+                <span class="date-tag">3-05-2026</span>
+            </div>
+            <strong>Foundation & Legal:</strong>
+            <ul>
+                <li><strong>Theming:</strong> Introduced the "Dark Teal" accent colors.</li>
+                <li><strong>Legal Framework:</strong> Finalized Terms of Service and Privacy Policy.</li>
+                <li><strong>Change Log:</strong> Created this centralized Updates page.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
