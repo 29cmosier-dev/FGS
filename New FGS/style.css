@@ -1,0 +1,291 @@
+
+body {
+    font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* Dynamic gradient background driven by theme settings.  The start and
+       end colours are configurable via the Themes admin page.  An
+       intermediate colour is calculated by lightening the start. */
+    background: linear-gradient(135deg, #000000 0%, #262626 85%, #000829 100%);
+    color: #e9eef8;
+    min-height: 100vh;
+  }
+  :root {
+    --accent: #cc5c00;
+  }
+  /* Define light and dark theme bodies.  Dark is default */
+  [data-bs-theme="dark"] body {
+    /* Use the same gradient for dark mode */
+    background: linear-gradient(135deg, #000000 0%, #262626 60%, #000829 100%);
+    color: #e9eef8;
+  }
+  [data-bs-theme="light"] body {
+    /* Use very light versions of the gradient colours for light mode */
+    background: linear-gradient(135deg, #1a1a1a 0%, #1a213e 100%);
+    color: #1a1d24;
+  }
+  .brand-accent { color: var(--accent); }
+  .btn-accent { background: var(--accent); border-color: var(--accent); color:#fff; }
+  .btn-accent:hover { filter: brightness(0.92); color:#fff; }
+  .link-accent { color: var(--accent); }
+  /* Modern card styling: deeper shadows, softer edges */
+  .card-glass {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 1rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  }
+  [data-bs-theme="light"] .card-glass {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 1rem;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+  }
+  /* Subtle hover animations for buttons; respects reduced-motion preferences. */
+  @media (prefers-reduced-motion: no-preference) {
+    .btn, .button {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .btn:hover, .button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+  }
+  /* Sidebar navigation styling for a modern look */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 240px;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(16px);
+    border-right: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .sidebar .nav-link {
+    color: #c0c8d8;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+    border-radius: 0.5rem;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sidebar .nav-link:hover, .sidebar .nav-link.active {
+    background: rgba(255,255,255,0.15);
+    color: #ffffff;
+  }
+  .main-content {
+    margin-left: 260px;
+    padding: 2rem;
+  }
+  /* Developer editing mode: previously enabled resizing on all elements
+     inside <main>.  Resizable handles were causing issues when
+     not editing, so resizing has been removed.  The .dev-editing
+     class still applies scrollbars only to the page content when
+     editing, but no elements are resizable. */
+  .hero {
+    /*
+     * The hero section anchors the landing page. A gentle gradient from the
+     * brand accent into the page background provides a smooth transition.
+     * Rounded corners and a soft shadow separate it from the surrounding
+     * content without drawing a hard border like previous versions.
+     */
+    position: relative;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    padding: 3rem 2rem;
+    /* Use a configurable blend for the hero gradient.  Administrators can
+       adjust theme_hero_start, theme_hero_end, theme_hero_accent_percent
+       and theme_hero_stop_percent via the Themes page.  The first colour
+       is a mix of the accent and the hero start colour using the
+       configured accent percentage.  The second colour is the hero
+       end colour, and the stop position is determined by
+       theme_hero_stop_percent. */
+    background: linear-gradient(135deg,
+      color-mix(in oklab, var(--accent) 65%, #000000),
+      #000000 80%
+    );
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  .hero::after { display: none; }
+  .nav-link.active { font-weight: 600; }
+  /* Improve nav spacing */
+  .navbar-nav .nav-link {
+    margin-right: 1rem;
+  }
+  .navbar-nav .nav-link:last-child {
+    margin-right: 0;
+  }
+  /* Wrap nav items so they don't overflow on small screens */
+  .navbar-nav {
+    flex-wrap: wrap;
+  }
+  .navbar-nav .nav-link {
+    margin-right: 0.75rem;
+    white-space: normal;
+  }
+  /* Dark nav bar with improved contrast */
+  .navbar {
+    background-color: #20232a;
+  }
+  .navbar .nav-link {
+    color: rgba(255,255,255,0.85);
+  }
+  .navbar .nav-link:hover, .navbar .nav-link.active {
+    color: #fff;
+  }
+  .navbar-brand {
+    color: #fff;
+  }
+  /* Compact navigation style: reduce padding and font size when compact_nav is enabled */
+  .compact-nav {
+    padding-top: 0.3rem !important;
+    padding-bottom: 0.3rem !important;
+  }
+  .compact-nav .nav-link {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    font-size: 0.875rem;
+  }
+
+  /* Minimal navigation hides labels and keeps the navigation collapsed on all screen sizes.
+     We rely on Bootstrap's collapse component to handle toggling, so we do not hide the
+     .navbar-collapse entirely here.  The toggler is forced visible. */
+  .minimal-nav .navbar-toggler {
+    display: block !important;
+  }
+
+  /* Hide nav labels when the hide_nav_labels setting is enabled.  The nav-link
+     contains both an icon and a span.nav-label.  When this class is present
+     on the nav container, the labels are hidden for a more compact view. */
+  .hide-nav-labels .nav-label {
+    display: none;
+  }
+  .hide-nav-labels .navbar-nav .nav-link > i.bi {
+    font-size: 1.1rem;
+  }
+  @media (min-width: 769px) {
+    .hide-nav-labels .navbar-nav .nav-item {
+      display: flex;
+      align-items: center;
+    }
+    .hide-nav-labels .navbar-nav .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      transition: gap .2s ease, padding-right .2s ease, background .18s ease, transform .18s ease;
+    }
+    .hide-nav-labels .navbar-nav .nav-link .nav-label {
+      display: inline-block;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      transform: translateX(-8px);
+      transition: max-width .24s ease, opacity .18s ease, transform .22s ease, margin-left .2s ease;
+      margin-left: 0;
+    }
+    .hide-nav-labels .navbar-nav .nav-link:hover,
+    .hide-nav-labels .navbar-nav .nav-link:focus-visible,
+    .hide-nav-labels .navbar-nav .nav-link.active {
+      gap: 0.5rem;
+      padding-right: 0.95rem;
+    }
+    .hide-nav-labels .navbar-nav .nav-link:hover .nav-label,
+    .hide-nav-labels .navbar-nav .nav-link:focus-visible .nav-label,
+    .hide-nav-labels .navbar-nav .nav-link.active .nav-label {
+      max-width: 120px;
+      opacity: 1;
+      transform: translateX(0);
+      margin-left: 0.1rem;
+    }
+  }
+  /* Provide more breathing room for form inputs */
+  .form-control, .form-select, textarea {
+    margin-bottom: 0.6rem;
+  }
+  .form-select option, .form-select optgroup, select option, select optgroup {
+    background: #162131;
+    color: #f4f7fb;
+  }
+  /* Add custom CSS here */
+
+/*  HELLO FELLOW HUMANS */
+/* Classic theme nav bar overrides */
+.navbar{background:linear-gradient(90deg,#000000,#000000)!important;border-bottom:1px solid rgba(255,255,255,0.1);}
+.navbar .navbar-brand,.navbar .nav-link{color:#f9f5ef;}
+.navbar .nav-link:hover{color:#ffffff;}
+.navbar .nav-link.active{color:#ffffff;border-bottom:2px solid var(--accent);}
+
+/* Fancy nav styling */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap');
+.navbar.fancy-nav{backdrop-filter:saturate(140%) blur(10px);-webkit-backdrop-filter:saturate(140%) blur(10px);box-shadow:0 10px 30px rgba(0,0,0,0.25);}
+.navbar.fancy-nav .navbar-brand,.navbar.fancy-nav .nav-link{font-family:'Space Grotesk','Segoe UI',system-ui,sans-serif;letter-spacing:0.2px;}
+.navbar.fancy-nav .navbar-brand{font-weight:700;position:relative;}
+.navbar.fancy-nav .navbar-brand::after{content:'';position:absolute;left:0;bottom:-6px;height:2px;width:0;background:linear-gradient(90deg,var(--accent),#ffd6a8);transition:width .25s ease;}
+.navbar.fancy-nav .navbar-brand:hover::after{width:100%;}
+.navbar.fancy-nav .nav-link{position:relative;font-weight:600;transition:transform .2s ease,color .2s ease;}
+.navbar.fancy-nav .nav-link,.navbar.fancy-nav .nav-link.active{border-bottom:0 !important;}
+.navbar.fancy-nav .dropdown-toggle::after{display:none;}
+.navbar.fancy-nav .dropdown-arrow{display:inline-flex;align-items:center;margin-left:0.35rem;font-size:0.85em;opacity:0.85;transition:opacity .2s ease,color .2s ease;}
+.navbar.fancy-nav .dropdown-toggle:hover .dropdown-arrow{opacity:1;} 
+.navbar.fancy-nav .nav-item.show > .nav-link .dropdown-arrow{transform:rotate(180deg);} 
+.navbar.fancy-nav .nav-link i{transition:transform .2s ease;}
+.navbar.fancy-nav .nav-link:hover{transform:translateY(-1px);} 
+.navbar.fancy-nav .nav-link:hover i{transform:translateY(-2px) scale(1.05);} 
+.navbar.fancy-nav .nav-link::after{content:'';position:absolute;left:10%;right:10%;bottom:-3px;height:2px;background:linear-gradient(90deg,var(--accent),rgba(255,214,168,0.2));transform:scaleX(0);transform-origin:center;transition:transform .2s ease,height .2s ease,box-shadow .2s ease;}
+.navbar.fancy-nav .nav-link:hover::after{transform:scaleX(1);height:3px;box-shadow:0 0 10px rgba(255,173,99,0.6);}
+.navbar.fancy-nav .nav-link.active::after{transform:scaleX(1);height:3px;box-shadow:0 0 12px rgba(255,173,99,0.75);}
+.navbar.fancy-nav .nav-right{gap:0.75rem;}
+.navbar.fancy-nav .user-menu-toggle{display:flex;align-items:center;gap:0.7rem;padding:0.45rem 0.8rem;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.07),rgba(255,255,255,0.03));border:1px solid rgba(255,255,255,0.09);box-shadow:0 10px 24px rgba(0,0,0,0.12);color:#fff;min-height:48px;max-width:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease;}
+.navbar.fancy-nav .user-menu-toggle:hover{transform:translateY(-1px);box-shadow:0 14px 28px rgba(0,0,0,0.18);background:linear-gradient(180deg,rgba(255,255,255,0.1),rgba(255,255,255,0.04));border-color:rgba(255,214,168,0.22);color:#fff;}
+.navbar.fancy-nav .user-menu-toggle:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(255,173,99,0.22),0 14px 28px rgba(0,0,0,0.22);}
+.navbar.fancy-nav .user-menu-avatar{width:34px;height:34px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);flex:0 0 34px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);}
+.navbar.fancy-nav .user-menu-avatar .avatar{width:100%;height:100%;margin:0;border-radius:50%;display:block;}
+.navbar.fancy-nav .user-menu-avatar .bi-person-circle{font-size:1.2rem;color:rgba(255,255,255,0.78);}
+.navbar.fancy-nav .user-menu-meta{display:flex;flex-direction:column;align-items:flex-start;gap:0.28rem;min-width:0;line-height:1;flex:1 1 auto;}
+.navbar.fancy-nav .user-menu-name{display:block;max-width:none;overflow:visible;text-overflow:clip;white-space:normal;overflow-wrap:anywhere;word-break:break-word;font-weight:700;font-size:0.94rem;letter-spacing:0.01em;flex:1 1 auto;min-width:0;line-height:1.12;}
+.navbar.fancy-nav .user-menu-badges{display:flex;flex-wrap:wrap;gap:0.3rem;align-items:center;min-width:0;}
+.navbar.fancy-nav .user-menu-badges .badge{margin:0 !important;font-size:0.67rem;padding:0.28rem 0.5rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
+.navbar.fancy-nav .user-menu-badges-overflow{position:relative;flex-wrap:nowrap;overflow:visible;}
+.navbar.fancy-nav .user-menu-badge-more{display:inline-flex;align-items:center;justify-content:center;min-width:1.9rem;height:1.55rem;padding:0 0.5rem;border-radius:999px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);color:#eef3ff;font-size:0.75rem;font-weight:700;cursor:pointer;line-height:1;}
+.navbar.fancy-nav .user-menu-badges-popover{position:absolute;top:calc(100% + 0.45rem);right:0;display:flex;flex-wrap:wrap;gap:0.34rem;min-width:220px;max-width:min(320px,70vw);padding:0.65rem;border-radius:16px;background:rgba(13,15,20,0.96);border:1px solid rgba(255,255,255,0.12);box-shadow:0 18px 36px rgba(0,0,0,0.36);opacity:0;transform:translateY(6px) scale(0.98);pointer-events:none;transition:opacity .18s ease,transform .18s ease;z-index:40;}
+.navbar.fancy-nav .user-menu-badges-overflow:hover .user-menu-badges-popover,.navbar.fancy-nav .user-menu-badges-overflow:focus-within .user-menu-badges-popover{opacity:1;transform:translateY(0) scale(1);pointer-events:auto;}
+.navbar.fancy-nav .user-menu-badges-popover .badge{font-size:0.66rem;max-width:none;}
+.navbar.fancy-nav .user-menu-toggle .dropdown-arrow{margin-left:0.1rem;font-size:0.82rem;opacity:0.72;}
+.navbar.fancy-nav .user-menu-toggle:hover .dropdown-arrow,.navbar.fancy-nav .dropdown.show .user-menu-toggle .dropdown-arrow{opacity:1;}
+.navbar.fancy-nav .dropdown-menu-end{margin-top:0.75rem;border-radius:18px;padding:0.55rem;background:rgba(18,18,18,0.96);border:1px solid rgba(255,255,255,0.1);box-shadow:0 22px 50px rgba(0,0,0,0.34);backdrop-filter:blur(16px);min-width:280px;}
+.navbar.fancy-nav .dropdown-menu-end .dropdown-item{border-radius:12px;padding:0.62rem 0.85rem;font-weight:600;color:#f6efe7;transition:background .18s ease,color .18s ease,transform .18s ease;}
+.navbar.fancy-nav .dropdown-menu-end .dropdown-item:hover{background:rgba(255,255,255,0.08);color:#fff;transform:translateX(2px);}
+.navbar.fancy-nav .dropdown-menu-end .dropdown-header{padding:0.55rem 0.85rem 0.35rem;color:rgba(255,214,168,0.82);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;}
+.navbar.fancy-nav .dropdown-menu-end .dropdown-divider{border-color:rgba(255,255,255,0.08);margin:0.45rem 0;}
+.navbar.fancy-nav .dropdown-menu-end form.px-3.py-1{padding:0.15rem 0 !important;}
+.navbar.fancy-nav .dropdown-menu-end .btn-outline-danger{border-radius:12px;}
+.navbar.fancy-nav .user-dropdown-menu,.navbar.fancy-nav .staff-dropdown-menu{transform-origin:top right;will-change:transform,opacity;z-index:1085;}
+.navbar.fancy-nav .user-dropdown-menu.show,.navbar.fancy-nav .staff-dropdown-menu.show{animation:navDropdownIn .3s cubic-bezier(.2,.9,.25,1);}
+.navbar.fancy-nav .user-dropdown-menu.show .dropdown-item,.navbar.fancy-nav .staff-dropdown-menu.show .dropdown-item,.navbar.fancy-nav .user-dropdown-menu.show .dropdown-header,.navbar.fancy-nav .staff-dropdown-menu.show .staff-dropdown-col{animation:navDropdownItemIn .28s cubic-bezier(.22,1,.36,1) both;}
+@media(min-width:769px){.navbar.fancy-nav .user-dropdown-menu{width:min(360px,calc(100vw - 32px));max-width:min(360px,calc(100vw - 32px));max-height:min(72vh,620px);overflow:auto;}}
+.navbar.fancy-nav .staff-dropdown-menu{margin-top:0.75rem;border-radius:20px;padding:0.85rem;background:rgba(18,18,18,0.97);border:1px solid rgba(255,255,255,0.1);box-shadow:0 22px 50px rgba(0,0,0,0.34);backdrop-filter:blur(16px);width:min(980px,calc(100vw - 32px));max-width:min(980px,calc(100vw - 32px));max-height:min(76vh,720px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+.navbar.fancy-nav .staff-dropdown-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;align-items:start;}
+.navbar.fancy-nav .staff-dropdown-col{border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:0.45rem;background:linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.02));min-height:100%;}
+.navbar.fancy-nav .staff-dropdown-title{display:block;padding:0.55rem 0.7rem 0.45rem;color:rgba(255,214,168,0.82);font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;font-weight:700;}
+.navbar.fancy-nav .staff-dropdown-menu .dropdown-item{border-radius:12px;padding:0.62rem 0.8rem;font-weight:600;color:#f6efe7;transition:background .18s ease,color .18s ease,transform .18s ease;white-space:normal;}
+.navbar.fancy-nav .staff-dropdown-menu .dropdown-item:hover{background:rgba(255,255,255,0.08);color:#fff;transform:translateX(2px);}
+.navbar.fancy-nav .nav-auth-login,.navbar.fancy-nav .nav-auth-signup{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0.55rem 0.95rem;border-radius:999px;font-weight:700;letter-spacing:0.01em;border:1px solid transparent;box-shadow:0 10px 22px rgba(0,0,0,0.12);transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease,color .18s ease;}
+.navbar.fancy-nav .nav-auth-login{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.12);color:#f8eee3;}
+.navbar.fancy-nav .nav-auth-login:hover{background:rgba(255,255,255,0.13);border-color:rgba(255,214,168,0.18);color:#fff;transform:translateY(-1px);box-shadow:0 14px 26px rgba(0,0,0,0.18);}
+.navbar.fancy-nav .nav-auth-signup{background:linear-gradient(180deg,var(--accent),#cf6316);border-color:rgba(255,173,99,0.25);color:#fff;box-shadow:0 14px 28px rgba(207,99,22,0.22);}
+.navbar.fancy-nav .nav-auth-signup:hover{color:#fff;transform:translateY(-1px);box-shadow:0 18px 34px rgba(207,99,22,0.28);filter:brightness(1.03);}
+@media(max-width:768px){.navbar.fancy-nav .navbar-toggler{padding:0.32rem 0.5rem;font-size:0.92rem;}.navbar.fancy-nav .navbar-toggler-icon{width:1.05em;height:1.05em;}.navbar.fancy-nav .nav-right{gap:0.45rem;align-items:center;}.navbar.fancy-nav .user-menu-toggle{padding:0.36rem 0.55rem;gap:0.42rem;min-height:42px;border-radius:999px;max-width:min(58vw,240px);}.navbar.fancy-nav .user-menu-avatar{width:32px;height:32px;flex-basis:32px;}.navbar.fancy-nav .user-menu-meta{display:flex;flex-direction:column;align-items:flex-start;min-width:0;gap:0.18rem;}.navbar.fancy-nav .user-menu-name{font-size:0.82rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;word-break:normal;overflow-wrap:normal;max-width:calc(58vw - 70px);line-height:1.05;}.navbar.fancy-nav .user-menu-badges{max-width:calc(58vw - 70px);overflow:hidden;}.navbar.fancy-nav .user-menu-badges .badge{font-size:0.6rem;padding:0.22rem 0.42rem;}.navbar.fancy-nav .user-menu-toggle .dropdown-arrow{margin-left:0;font-size:0.74rem;flex:0 0 auto;}.navbar.fancy-nav .user-dropdown-menu,.navbar.fancy-nav .staff-dropdown-menu{position:fixed;top:72px;left:12px;right:12px;min-width:auto;max-width:none;width:auto;padding:0.6rem;border-radius:20px;background:rgba(13,15,20,0.985);border:1px solid rgba(255,255,255,0.12);box-shadow:0 24px 50px rgba(0,0,0,0.45);max-height:calc(100vh - 92px);overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;transform:none !important;inset:auto 12px auto 12px !important;display:none;}.navbar.fancy-nav .user-dropdown-menu.show,.navbar.fancy-nav .staff-dropdown-menu.show{display:block;}.navbar.fancy-nav .user-dropdown-menu .dropdown-item,.navbar.fancy-nav .staff-dropdown-menu .dropdown-item{padding:0.76rem 0.92rem;font-size:0.95rem;line-height:1.35;white-space:normal;}.navbar.fancy-nav .user-dropdown-menu .dropdown-header{padding:0.65rem 0.92rem 0.4rem;font-size:0.74rem;}.navbar.fancy-nav .user-dropdown-menu .dropdown-divider{margin:0.55rem 0;}.navbar.fancy-nav .staff-dropdown-grid{grid-template-columns:1fr;}.navbar.fancy-nav .nav-auth-login,.navbar.fancy-nav .nav-auth-signup{min-height:38px;padding:0.48rem 0.82rem;font-size:0.84rem;}}
+@keyframes navDropdownIn{0%{opacity:0;transform:translateY(-10px) scale(.97);}100%{opacity:1;transform:translateY(0) scale(1);}}
+@keyframes navDropdownItemIn{0%{opacity:0;transform:translateY(-6px);}100%{opacity:1;transform:translateY(0);}}
+@keyframes navGlow{0%{box-shadow:0 10px 30px rgba(0,0,0,0.2);}50%{box-shadow:0 14px 36px rgba(0,0,0,0.35);}100%{box-shadow:0 10px 30px rgba(0,0,0,0.2);}}
+.navbar.fancy-nav{animation:navGlow 6s ease-in-out infinite;}
+@media (prefers-reduced-motion: reduce){.navbar.fancy-nav,.navbar.fancy-nav .nav-link,.navbar.fancy-nav .nav-link i{animation:none;transition:none;}}
