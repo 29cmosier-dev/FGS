@@ -65,7 +65,7 @@ def scrape_stats(session):
 
 def scrape_schools(session):
     soup = BeautifulSoup(session.get(USERS_URL).text, 'html.parser')
-    cards = soup.find_all(class_="card-glass")
+    cards = soup.find_all(class_="admin-user-card")
     
     user_list = []
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -75,7 +75,7 @@ def scrape_schools(session):
         role = role_badge.get_text(strip=True) if role_badge else "User"
 
         school, grade = "Other/Staff", "N/A"
-        details = card.find_all(class_="small text-muted")
+        details = card.find_all(class_="admin-user-card-copy mt-1")
         for d in details:
             text = d.get_text(strip=True)
             if "•" in text:
