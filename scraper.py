@@ -5,7 +5,6 @@ import pandas as pd
 from datetime import datetime
 import re
 
-
 USERNAME = "ziggy"
 PASSWORD = os.getenv('STUDIO_PASS')
 LOGIN_URL = "https://hub.flyinggoosestudios.com/?route=login"
@@ -14,47 +13,64 @@ USERS_URL = "https://hub.flyinggoosestudios.com/?route=admin.users"
 
 def run_all():
     print("--- Starting Session ---")
+    
+    # Check if Secret is actually loaded
+    if not PASSWORD:
+        print("CRITICAL ERROR: STUDIO_PASS environment variable is empty!")
+        return
+
     with requests.Session() as session:
-        session.headers.update({'User-Agent': 'Mozilla/5.0'})
+        session.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
         
         # 1. Login Process
+        print(f"Fetching login page: {LOGIN_URL}")
         response = session.get(LOGIN_URL)
         login_soup = BeautifulSoup(response.text, 'html.parser')
-        csrf_tag = login_soup.find('input', {'name': 'csrf'})
         
+        csrf_tag = login_soup.find('input', {'name': 'csrf'})
         if not csrf_tag:
-            print("CRITICAL ERROR: CSRF token not found.")
+            print("CRITICAL ERROR: CSRF token not found on login page.")
             return
             
         csrf_token = csrf_tag.get('value')
+        print(f"CSRF Token acquired: {csrf_token[:8]}...")
+
         login_data = {'csrf': csrf_token, 'email': USERNAME, 'password': PASSWORD}
         login_post = session.post(LOGIN_URL, data=login_data)
         
-        # 2. Suspension Check (The "Kill Switch")
+        print(f"Post-Login URL: {login_post.url}")
+
+        # 2. Suspension Check
         if "route=school_suspended" in login_post.url:
             print("NOTICE: School is currently suspended. Ending session early.")
-            return # Stops EVERYTHING here
-        
+            return
+
+        # 3. Verify Login Success
+        if "login" in login_post.url:
+            print("LOGIN FAILED: Still on login page. Check username/password.")
+            return
+            
         print("Login Successful. Starting data collection...")
 
-        # 3. Task 1: Scrape Dashboard Stats
+        # 4. Scrape
         scrape_stats(session)
-        
-        # 4. Task 2: Scrape School Breakdown
         scrape_users(session)
 
 def scrape_stats(session):
+    print(f"\n--- Scraping Dashboard: {DASHBOARD_URL} ---")
     dash_response = session.get(DASHBOARD_URL)
     dash_soup = BeautifulSoup(dash_response.text, 'html.parser')
     
+    print(f"Current URL: {dash_response.url}")
+    print(f"Page Title: {dash_soup.title.string if dash_soup.title else 'No Title'}")
+
     def get_val(label_text):
-        # re.compile looks for the text even if there is whitespace around it
-        header = dash_soup.find('h6', string=re.compile(rf'^\s*{label_text}\s*$', re.I))
+        # Improved regex to be very loose with spacing
+        header = dash_soup.find('h6', string=re.compile(rf'.*{label_text}.*', re.I))
         if header:
-            # finds the very next div with the number
             val_tag = header.find_next(class_='display-6')
             return val_tag.get_text(strip=True) if val_tag else "0"
-        return "N/A" # Changed to N/A so we can see if it's missing vs just 0
+        return "N/A"
 
     data = {
         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
@@ -65,45 +81,43 @@ def scrape_stats(session):
     }
     
     df = pd.DataFrame([data])
+    print("\nCaptured Stats:")
     print(df.to_string(index=False))
     return df
 
-
 def scrape_users(session):
+    print(f"\n--- Scraping Users: {USERS_URL} ---")
     response = session.get(USERS_URL)
     soup = BeautifulSoup(response.text, 'html.parser')
     
-    # Find all user cards
     user_cards = soup.find_all(class_='admin-user-card')
+    print(f"Found {len(user_cards)} user cards.")
     
     user_list = []
-    
     for card in user_cards:
-        # Extract data using the new specific classes
-        name = card.find(class_='fw-semibold').get_text(strip=True)
-        handle = card.find(class_='text-muted').get_text(strip=True)
-        
-        # 'admin-user-card-copy' is used for both Email and School/Grade
-        details = card.find_all(class_='admin-user-card-copy')
-        email = details[0].get_text(strip=True) if len(details) > 0 else "N/A"
-        school_info = details[1].get_text(strip=True) if len(details) > 1 else "N/A"
-        
-        # Extract meta values (Birthday, Age, Last Login, etc.)
-        meta_values = [v.get_text(strip=True) for v in card.find_all(class_='admin-user-mini-value')]
-        
-        user_list.append({
-            "Name": name,
-            "Handle": handle,
-            "Email": email,
-            "School": school_info,
-            "Last Login": meta_values[2] if len(meta_values) > 2 else "N/A"
-        })
-    
-    # Convert to DataFrame
-    df = pd.DataFrame(user_list)
-    print(df.head())
-    return df
+        try:
+            name = card.find(class_='fw-semibold').get_text(strip=True)
+            details = card.find_all(class_='admin-user-card-copy')
+            email = details[0].get_text(strip=True) if len(details) > 0 else "N/A"
+            school = details[1].get_text(strip=True) if len(details) > 1 else "N/A"
+            
+            meta = [v.get_text(strip=True) for v in card.find_all(class_='admin-user-mini-value')]
+            
+            user_list.append({
+                "Name": name,
+                "Email": email,
+                "School": school,
+                "Last Login": meta[2] if len(meta) > 2 else "N/A"
+            })
+        except Exception as e:
+            print(f"Error parsing a card: {e}")
 
+    df = pd.DataFrame(user_list)
+    if not df.empty:
+        print(df.head())
+    else:
+        print("User DataFrame is empty.")
+    return df
 
 if __name__ == "__main__":
     run_all()
