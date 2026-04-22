@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from datetime import datetime
+import re
 
 
 USERNAME = "ziggy"
@@ -46,15 +47,15 @@ def scrape_stats(session):
     dash_response = session.get(DASHBOARD_URL)
     dash_soup = BeautifulSoup(dash_response.text, 'html.parser')
     
-    # This helper finds the number based on the heading text
-    def get_val(label):
-        header = dash_soup.find('h6', string=label)
+    def get_val(label_text):
+        # re.compile looks for the text even if there is whitespace around it
+        header = dash_soup.find('h6', string=re.compile(rf'^\s*{label_text}\s*$', re.I))
         if header:
-            # The number is in the div with class 'display-6' right after the <h6>
-            return header.find_next(class_='display-6').get_text(strip=True)
-        return "0"
+            # finds the very next div with the number
+            val_tag = header.find_next(class_='display-6')
+            return val_tag.get_text(strip=True) if val_tag else "0"
+        return "N/A" # Changed to N/A so we can see if it's missing vs just 0
 
-    # Now it doesn't matter what order they are in!
     data = {
         "Timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "Total Users": get_val("Users"),
