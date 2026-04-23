@@ -39,35 +39,43 @@ def run_all():
         csrf_token = csrf_tag.get('value')
         print(f"CSRF Token acquired: {csrf_token[:8]}...")
 
-        # Create the payload
+        # 1. Acquire the token
+        response = session.get(LOGIN_URL)
+        login_soup = BeautifulSoup(response.text, 'html.parser')
+        csrf_tag = login_soup.find('input', {'name': 'csrf'})
+        csrf_token = csrf_tag.get('value')
+
+        # 2. Setup the headers and data
+        # Explicitly set the Referer to let the site know where the request came from
+        session.headers.update({'Referer': LOGIN_URL})
+
         login_data = {
             'csrf': csrf_token, 
             'email': USERNAME, 
             'password': PASSWORD
         }
 
-        # Update headers right before the post to look like a real browser
-        session.headers.update({'Referer': LOGIN_URL})
+        # 3. Perform the login
+        login_post = session.post(LOGIN_URL, data=login_data, allow_redirects=True)
+        print(f"Final URL after login attempt: {login_post.url}")
 
-        # Perform the login
-        login_post = session.post(LOGIN_URL, data=login_data)
 
         
         print(f"Post-Login URL: {login_post.url}")
 
-        # 2. Suspension Check
+        # 3. Suspension Check
         if "route=school_suspended" in login_post.url:
             print("NOTICE: School is currently suspended. Ending session early.")
             return
 
-        # 3. Verify Login Success
+        # 4. Verify Login Success
         if "login" in login_post.url:
             print("LOGIN FAILED: Still on login page. Check username/password.")
             return
             
         print("Login Successful. Starting data collection...")
 
-        # 4. Scrape
+        # 5. Scrape
         scrape_stats(session)
         scrape_users(session)
 
