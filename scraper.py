@@ -128,13 +128,20 @@ def scrape_users(session):
             location_div = card.find(lambda tag: tag.name == "div" and "•" in tag.text)
             
             if location_div:
-                raw_text = location_div.get_text(strip=True)
-                parts = raw_text.split("•")
+                parts = location_div.get_text(strip=True).split("•")
                 school = parts[0].strip()
-                # Ensure we don't accidentally grab "Teacher" as a grade
+                
                 if len(parts) > 1:
-                    potential_grade = parts[1].strip()
-                    grade = potential_grade if "Grade" in potential_grade else "Staff/Other"
+                    raw_grade = parts[1].strip()
+                    # 1. Fix "Grade Teacher" -> "Staff"
+                    if "Teacher" in raw_grade:
+                        grade = "Staff"
+                    # 2. Fix "Grade Grade 9" -> "Grade 9"
+                    else:
+                        # This replaces "Grade" with nothing, then adds one clean "Grade " back
+                        clean_num = raw_grade.replace("Grade", "").strip()
+                        grade = f"Grade {clean_num}" if clean_num else "N/A"
+
             
             user_list.append({
                 "Role": role,
