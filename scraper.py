@@ -20,7 +20,11 @@ def run_all():
         return
 
     with requests.Session() as session:
-        session.headers.update({'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'})
+        session.headers.update({
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+            'Referer': LOGIN_URL  # Add this line
+        })
+
         
         # 1. Login Process
         print(f"Fetching login page: {LOGIN_URL}")
@@ -35,8 +39,19 @@ def run_all():
         csrf_token = csrf_tag.get('value')
         print(f"CSRF Token acquired: {csrf_token[:8]}...")
 
-        login_data = {'csrf': csrf_token, 'email': USERNAME, 'password': PASSWORD}
+        # Create the payload
+        login_data = {
+            'csrf': csrf_token, 
+            'email': USERNAME, 
+            'password': PASSWORD
+        }
+
+        # Update headers right before the post to look like a real browser
+        session.headers.update({'Referer': LOGIN_URL})
+
+        # Perform the login
         login_post = session.post(LOGIN_URL, data=login_data)
+
         
         print(f"Post-Login URL: {login_post.url}")
 
