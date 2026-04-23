@@ -13,86 +13,51 @@ USERS_URL = "https://hub.flyinggoosestudios.com/?route=admin.users"
 
 def run_all():
     print("--- Starting Session ---")
-    
-    # Check if Secret is actually loaded
     if not PASSWORD:
         print("CRITICAL ERROR: STUDIO_PASS environment variable is empty!")
         return
 
     with requests.Session() as session:
+        # 1. Setup Browser Headers
         session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            'Referer': LOGIN_URL  # Add this line
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': LOGIN_URL
         })
 
-        
-        # 1. Login Process
+        # 2. Fetch login page & grab ALL hidden inputs (CSRF, etc.)
         print(f"Fetching login page: {LOGIN_URL}")
         response = session.get(LOGIN_URL)
         login_soup = BeautifulSoup(response.text, 'html.parser')
-
-        # Find the login form - this ensures we get all hidden security fields
+        
         login_form = login_soup.find('form')
         if not login_form:
             print("CRITICAL ERROR: Login form not found.")
             return
 
-        # Extract all hidden inputs automatically
+        # Dynamically build the payload from the form's hidden fields
         login_data = {tag.get('name'): tag.get('value') for tag in login_form.find_all('input', type='hidden')}
-        
-        # Manually add the credentials
         login_data['email'] = USERNAME
         login_data['password'] = PASSWORD
 
-        print(f"Submitting payload with keys: {list(login_data.keys())}")
-
-        # Crucial: The site likely checks if you're coming from the login page
-        session.headers.update({'Referer': LOGIN_URL})
-
-        login_post = session.post(LOGIN_URL, data=login_data)
-        print(f"Post-Login URL: {login_post.url}")
-
-        response = session.get(LOGIN_URL)
-        login_soup = BeautifulSoup(response.text, 'html.parser')
-        csrf_tag = login_soup.find('input', {'name': 'csrf'})
-        csrf_token = csrf_tag.get('value')
-
-
-        # 2. Setup the headers and data
-        # Explicitly set the Referer to let the site know where the request came from
-        session.headers.update({'Referer': LOGIN_URL})
-
-        login_data = {
-            'csrf': csrf_token,
-            'email': USERNAME, 
-            'password': PASSWORD
-        }
-
-        # 3. Perform the login
+        # 3. Perform the Login
+        print("Attempting login...")
         login_post = session.post(LOGIN_URL, data=login_data, allow_redirects=True)
-        print(f"Final URL after login attempt: {login_post.url}")
-
-
         
-        print(f"Post-Login URL: {login_post.url}")
-
-        # 3. Suspension Check
-        if "route=school_suspended" in login_post.url:
-            print("NOTICE: School is currently suspended. Ending session early.")
+        # 4. THE FIX: Force navigate to the Dashboard to "activate" the session
+        print("Kicking session to Admin Dashboard...")
+        dash_response = session.get(DASHBOARD_URL)
+        
+        # 5. Verify Success by checking the content of the dashboard
+        if "Dashboard" not in dash_response.text and "Ziggy" not in dash_response.text:
+            print(f"LOGIN FAILED: Still can't see admin data. URL: {dash_response.url}")
             return
 
-        # 4. Verify Login Success
-        if "login" in login_post.url:
-            print("LOGIN FAILED: Still on login page. Check username/password.")
-            print("--- Login Response Snippet ---")
-            print(login_post.text[:2000]) # This will print the HTML of the failure page
-            return
-            
-        print("Login Successful. Starting data collection...")
-
-        # 5. Scrape
+        print("Login Successful! Starting data collection...")
+        
+        # 6. Pass the "kicked" session into your scrapers
         scrape_stats(session)
         scrape_users(session)
+
 
 def scrape_stats(session):
     print(f"\n--- Scraping Dashboard: {DASHBOARD_URL} ---")
