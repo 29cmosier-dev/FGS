@@ -99,21 +99,28 @@ def scrape_users(session):
     user_list = []
     for card in user_cards:
         try:
-            name = card.find(class_='fw-semibold').get_text(strip=True)
-            details = card.find_all(class_='admin-user-card-copy')
-            email = details[0].get_text(strip=True) if len(details) > 0 else "N/A"
-            school = details[1].get_text(strip=True) if len(details) > 1 else "N/A"
+            # 1. Role (The first badge: e.g., "Student")
+            role_tag = card.find('span', class_='badge')
+            role = role_tag.get_text(strip=True) if role_tag else "N/A"
+
+            # 2. School and Grade (Found in the div containing the "•" symbol)
+            school, grade = "N/A", "N/A"
+            location_div = card.find(lambda tag: tag.name == "div" and "•" in tag.text)
             
-            meta = [v.get_text(strip=True) for v in card.find_all(class_='admin-user-mini-value')]
-            
+            if location_div:
+                parts = location_div.get_text(strip=True).split("•")
+                school = parts[0].strip()
+                grade = parts[1].strip() if len(parts) > 1 else "N/A"
+
             user_list.append({
-                "Name": name,
-                "Email": email,
+                "Role": role,
                 "School": school,
-                "Last Login": meta[2] if len(meta) > 2 else "N/A"
+                "Grade": grade
             })
+
         except Exception as e:
             print(f"Error parsing a card: {e}")
+
 
     df = pd.DataFrame(user_list)
     if not df.empty:
