@@ -48,7 +48,7 @@ def run_all():
         dash_response = session.get(DASHBOARD_URL)
         
         # 5. Verify Success by checking the content of the dashboard
-        if "Dashboard" not in dash_response.text and "Ziggy" not in dash_response.text:
+        if "Dashboard" not in dash_response.text and "Stats Monitor" not in dash_response.text:
             print(f"LOGIN FAILED: Still can't see admin data. URL: {dash_response.url}")
             return
 
