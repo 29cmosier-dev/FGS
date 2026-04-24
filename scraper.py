@@ -65,7 +65,7 @@ def run_all():
                 # Read the existing data
                 df_old = pd.read_csv(file_path)
                 df_combined = pd.concat([df_old, df_stats], ignore_index=True)
-                temp_dt = pd.to_datetime(df_combined['Timestamp'])
+                temp_dt = pd.to_datetime(df_combined['Timestamp'], format='mixed')
                 df_combined['sort_time'] = temp_dt.dt.hour * 60 + temp_dt.dt.minute
                 df_combined = df_combined.sort_values(by='sort_time')
                 df_combined = df_combined.drop(columns=['sort_time'])
