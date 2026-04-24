@@ -64,9 +64,13 @@ def run_all():
             if os.path.exists(file_path):
                 # Read the existing data
                 df_old = pd.read_csv(file_path)
-                # Add the new row to the bottom
                 df_combined = pd.concat([df_old, df_stats], ignore_index=True)
+                temp_dt = pd.to_datetime(df_combined['Timestamp'])
+                df_combined['sort_time'] = temp_dt.dt.hour * 60 + temp_dt.dt.minute
+                df_combined = df_combined.sort_values(by='sort_time')
+                df_combined = df_combined.drop(columns=['sort_time'])
                 df_combined.to_csv(file_path, index=False)
+
                 print(f"Appended new stats to {file_path}")
             else:
                 # If the file doesn't exist yet, just create it
