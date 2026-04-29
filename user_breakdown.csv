@@ -1,4 +1,12 @@
 Role,School,Grade
+Student,Syracuse Junior High,Grade 9
+Student,N/A,N/A
+Student,N/A,N/A
+Student,N/A,N/A
+Student,N/A,N/A
+Student,N/A,N/A
+Student,N/A,N/A
+Student,N/A,N/A
 Student,N/A,N/A
 Admin,N/A,N/A
 Student,N/A,N/A
@@ -85,7 +93,7 @@ Student,Syracuse Junior High,Grade 9
 Student,Sunset Junior High,Grade 9
 Student,Syracuse Junior High,Grade 7
 Student,Horizon Junior High,Grade 9
-Admin++,Syracuse Junior High,Grade 9
+Admin,Syracuse Junior High,Grade 9
 Student,Syracuse Junior High,Grade 7
 Student,Syracuse Junior High,Grade 9
 Student,Syracuse Junior High,Grade 9
@@ -111,5 +119,5 @@ Student,Syracuse Junior High,Grade 9
 Student,Syracuse Junior High,Grade 8
 Student,Syracuse Junior High,Grade 9
 Admin,Syracuse Junior High,Grade 9
-Admin,Syracuse Junior High,Grade 9
+Admin+,Syracuse Junior High,Grade 9
 Admin,Syracuse Junior High,Grade 9
