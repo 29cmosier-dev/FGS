@@ -1,6 +1,6 @@
 Role,School,Grade
 Student,N/A,N/A
-Student,N/A,N/A
+Student,Syracuse High,Grade 10
 Student,N/A,N/A
 Student,N/A,N/A
 Student,Fairfield Junior High,Grade 12
@@ -42,7 +42,7 @@ Student,N/A,N/A
 Student,N/A,N/A
 Teacher,Syracuse Junior High,Staff
 Student,Syracuse Junior High,Grade 8
-Student,Syracuse Junior High,Grade 9
+Student,Syracuse High,Grade 10
 Student,Syracuse Junior High,Grade 9
 Student,Syracuse Junior High,Grade 8
 Student,Syracuse Junior High,Grade 9
@@ -146,7 +146,7 @@ Student,Syracuse Junior High,Grade 7
 Student,Syracuse Junior High,Grade 9
 Student,Syracuse Junior High,Grade 9
 Student,Syracuse Junior High,Grade 9
-Student,Syracuse Junior High,Grade 9
+Student,Syracuse High,Grade 10
 Admin,Syracuse High,Grade 10
 Admin+,Syracuse High,Grade 10
 Admin,Syracuse High,Grade 10
